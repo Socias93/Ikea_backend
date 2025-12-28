@@ -1,5 +1,7 @@
 import express from "express";
 
+const router = express.Router();
+
 export interface Category {
   id: string;
   name: string;
@@ -18,8 +20,6 @@ export const categories: Category[] = [
 export function getCategories() {
   return categories;
 }
-
-const router = express.Router();
 
 router.get("/", (req, res) => {
   return res.send(categories);

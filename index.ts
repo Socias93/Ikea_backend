@@ -1,13 +1,16 @@
 import express from "express";
 import categories from "./routes/categories";
 import items from "./routes/items";
+import employes from "./routes/employes";
 
 const app = express();
 const PORT = 5555;
-const CATEGORY_URL = "/api/categories";
+const CATEGORIES_URL = "/api/categories";
 const ITEMS_URL = "/api/items";
+const EMPLOYES_URL = "/api/employes";
 
-app.use(CATEGORY_URL, categories);
+app.use(CATEGORIES_URL, categories);
 app.use(ITEMS_URL, items);
+app.use(EMPLOYES_URL, employes);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
