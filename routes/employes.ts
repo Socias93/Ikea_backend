@@ -1,4 +1,5 @@
 import express from "express";
+import { validate } from "./schemas/Employes";
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ export interface Employe {
   name: string;
   age: number;
   email: string;
-  number: number;
+  phone: number;
   role: string;
 }
 
@@ -21,7 +22,7 @@ export const employes: Employe[] = [
     name: "Anna Larsson",
     age: 32,
     email: "anna.larsson@ikea.com",
-    number: 701234567,
+    phone: 701234567,
     role: "Store Manager",
   },
   {
@@ -29,7 +30,7 @@ export const employes: Employe[] = [
     name: "Erik Johansson",
     age: 28,
     email: "erik.johansson@ikea.com",
-    number: 702345678,
+    phone: 702345678,
     role: "Sales Associate",
   },
   {
@@ -37,7 +38,7 @@ export const employes: Employe[] = [
     name: "Maria Svensson",
     age: 41,
     email: "maria.svensson@ikea.com",
-    number: 703456789,
+    phone: 703456789,
     role: "HR Specialist",
   },
   {
@@ -45,7 +46,7 @@ export const employes: Employe[] = [
     name: "Johan Andersson",
     age: 35,
     email: "johan.andersson@ikea.com",
-    number: 704567890,
+    phone: 704567890,
     role: "Logistics Coordinator",
   },
   {
@@ -53,7 +54,7 @@ export const employes: Employe[] = [
     name: "Sara Nilsson",
     age: 26,
     email: "sara.nilsson@ikea.com",
-    number: 705678901,
+    phone: 705678901,
     role: "Warehouse Worker",
   },
   {
@@ -61,7 +62,7 @@ export const employes: Employe[] = [
     name: "David Persson",
     age: 39,
     email: "david.persson@ikea.com",
-    number: 706789012,
+    phone: 706789012,
     role: "Supply Chain Manager",
   },
   {
@@ -69,7 +70,7 @@ export const employes: Employe[] = [
     name: "Elin Gustafsson",
     age: 24,
     email: "elin.gustafsson@ikea.com",
-    number: 707890123,
+    phone: 707890123,
     role: "Customer Service",
   },
   {
@@ -77,7 +78,7 @@ export const employes: Employe[] = [
     name: "Magnus Holm",
     age: 44,
     email: "magnus.holm@ikea.com",
-    number: 708901234,
+    phone: 708901234,
     role: "IT Support Technician",
   },
   {
@@ -85,7 +86,7 @@ export const employes: Employe[] = [
     name: "Linda Berg",
     age: 31,
     email: "linda.berg@ikea.com",
-    number: 709012345,
+    phone: 709012345,
     role: "Visual Merchandiser",
   },
   {
@@ -93,7 +94,7 @@ export const employes: Employe[] = [
     name: "Oskar Lindqvist",
     age: 29,
     email: "oskar.lindqvist@ikea.com",
-    number: 701123456,
+    phone: 701123456,
     role: "E-commerce Specialist",
   },
 ];
@@ -105,6 +106,25 @@ router.get(EMPLOYE_API, (req, res) => {
 router.get(EMPLOYE_API_ID, (req, res) => {
   const employe = employes.find((e) => e.id === req.params.id);
   if (!employe) return res.status(400).send(NOT_FOUND);
+
+  return res.send(employe);
+});
+
+router.post(EMPLOYE_API, (req, res) => {
+  const validation = validate(req.body);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
+
+  const employe: Employe = {
+    id: Date.now().toString(),
+    name: req.body.name,
+    age: req.body.age,
+    email: req.body.email,
+    phone: req.body.phone,
+    role: req.body.role,
+  };
+
+  employes.push(employe);
 
   return res.send(employe);
 });

@@ -34,7 +34,8 @@ router.get(CATEGORY_API_ID, (req, res) => {
 
 router.post(CATEGORY_API, (req, res) => {
   const validation = validate(req.body);
-  if (!validation.success) return res.status(400).send(validation.error.issues);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
 
   const category: Category = {
     id: Date.now().toString(),
