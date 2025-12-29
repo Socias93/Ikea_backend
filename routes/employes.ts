@@ -2,6 +2,10 @@ import express from "express";
 
 const router = express.Router();
 
+const EMPLOYE_API = "/";
+const EMPLOYE_API_ID = "/:id";
+const NOT_FOUND = "Employe not found";
+
 export interface Employe {
   id: string;
   name: string;
@@ -94,12 +98,15 @@ export const employes: Employe[] = [
   },
 ];
 
-export function getEmployes() {
-  return employes;
-}
-
-router.get("/", (req, res) => {
+router.get(EMPLOYE_API, (req, res) => {
   return res.send(employes);
+});
+
+router.get(EMPLOYE_API_ID, (req, res) => {
+  const employe = employes.find((e) => e.id === req.params.id);
+  if (!employe) return res.status(400).send(NOT_FOUND);
+
+  return res.send(employe);
 });
 
 export default router;
