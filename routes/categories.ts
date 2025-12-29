@@ -1,4 +1,5 @@
 import express from "express";
+import { validate } from "./schemas/Categories";
 
 const router = express.Router();
 const CATEGORY_API = "/";
@@ -31,6 +32,17 @@ router.get(CATEGORY_API_ID, (req, res) => {
   return res.send(category);
 });
 
-router.post(CATEGORY_API, (req, res) => {});
+router.post(CATEGORY_API, (req, res) => {
+  const validation = validate(req.body);
+  if (!validation.success) return res.status(400).send(validation.error.issues);
+
+  const category: Category = {
+    id: Date.now().toString(),
+    name: req.body.name,
+  };
+  categories.push(category);
+
+  return res.send(category);
+});
 
 export default router;

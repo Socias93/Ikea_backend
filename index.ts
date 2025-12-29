@@ -4,6 +4,7 @@ import items from "./routes/items";
 import employes from "./routes/employes";
 
 const app = express();
+app.use(express.json());
 const PORT = 5555;
 const CATEGORIES_URL = "/api/categories";
 const ITEMS_URL = "/api/items";
