@@ -5,8 +5,8 @@ const categorySchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 });
 
-type CategoryFormData = z.infer<typeof categorySchema>;
+type eategoryFormData = z.infer<typeof categorySchema>;
 
-export function validate(body: CategoryFormData) {
+export function validate(body: eategoryFormData) {
   return categorySchema.safeParse(body);
 }
