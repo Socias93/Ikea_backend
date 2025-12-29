@@ -31,4 +31,6 @@ router.get(CATEGORY_API_ID, (req, res) => {
   return res.send(category);
 });
 
+router.post(CATEGORY_API, (req, res) => {});
+
 export default router;
