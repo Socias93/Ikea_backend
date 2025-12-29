@@ -1,6 +1,9 @@
 import express from "express";
 
 const router = express.Router();
+const CATEGORY_API = "/";
+const CATEGORY_API_ID = "/:id";
+const NOT_FOUND = "Category not found";
 
 export interface Category {
   id: string;
@@ -17,12 +20,15 @@ export const categories: Category[] = [
   { id: "7", name: "Outdoor" },
 ];
 
-export function getCategories() {
-  return categories;
-}
-
-router.get("/", (req, res) => {
+router.get(CATEGORY_API, (req, res) => {
   return res.send(categories);
+});
+
+router.get(CATEGORY_API_ID, (req, res) => {
+  const category = categories.find((c) => c.id === req.params.id);
+  if (!category) return res.status(400).send(NOT_FOUND);
+
+  return res.send(category);
 });
 
 export default router;
