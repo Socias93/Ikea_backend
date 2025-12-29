@@ -2,6 +2,9 @@ import { Category } from "./categories";
 import express from "express";
 
 const router = express.Router();
+const ITEM_API = "/";
+const ITEM_API_ID = "/:id";
+const NOT_FOUND = "item not found";
 
 export interface Item {
   id: string;
@@ -222,12 +225,15 @@ export const items: Item[] = [
   },
 ];
 
-export function getItems() {
-  return items;
-}
-
-router.get("/", (req, res) => {
+router.get(ITEM_API, (req, res) => {
   return res.send(items);
+});
+
+router.get(ITEM_API_ID, (req, res) => {
+  const item = items.find((i) => i.id === req.params.id);
+  if (!item) return res.status(400).send(NOT_FOUND);
+
+  return res.send(item);
 });
 
 export default router;
