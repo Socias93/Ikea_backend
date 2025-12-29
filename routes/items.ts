@@ -1,10 +1,12 @@
-import { Category } from "./categories";
+import { categories, Category } from "./categories";
 import express from "express";
+import { validate } from "./schemas/Items";
 
 const router = express.Router();
 const ITEM_API = "/";
 const ITEM_API_ID = "/:id";
-const NOT_FOUND = "item not found";
+const ITEM_NOT_FOUND = "item not found";
+const CATEGORY_NOT_FOUND = "Category not found";
 
 export interface Item {
   id: string;
@@ -231,7 +233,28 @@ router.get(ITEM_API, (req, res) => {
 
 router.get(ITEM_API_ID, (req, res) => {
   const item = items.find((i) => i.id === req.params.id);
-  if (!item) return res.status(400).send(NOT_FOUND);
+  if (!item) return res.status(400).send(ITEM_NOT_FOUND);
+
+  return res.send(item);
+});
+
+router.post(ITEM_API, (req, res) => {
+  const validation = validate(req.body);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
+
+  const category = categories.find((c) => c.id === req.body.categoryId);
+  if (!category) return res.status(400).send(CATEGORY_NOT_FOUND);
+
+  const item: Item = {
+    id: Date.now().toString(),
+    name: req.body.name,
+    category: category,
+    numberInStock: req.body.numberInStock,
+    price: req.body.price,
+  };
+
+  items.push(item);
 
   return res.send(item);
 });
