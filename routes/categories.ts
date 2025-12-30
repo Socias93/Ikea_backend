@@ -1,10 +1,12 @@
 import express from "express";
 import { validate } from "./schemas/Categories";
+import { items } from "./items";
 
 const router = express.Router();
 const CATEGORY_API = "/";
 const CATEGORY_API_ID = "/:id";
 const NOT_FOUND = "Category not found";
+const IS_USED = "Category must be empty to be able to delte it";
 
 export interface Category {
   id: string;
@@ -62,6 +64,11 @@ router.put(CATEGORY_API_ID, (req, res) => {
 router.delete(CATEGORY_API_ID, (req, res) => {
   const category = categories.find((c) => c.id === req.params.id);
   if (!category) return res.status(400).send(NOT_FOUND);
+
+  const used = items.some((i) => i.category.id === category.id);
+  if (used) {
+    return res.status(400).send(IS_USED);
+  }
 
   const index = categories.indexOf(category);
   const deletedCategory = categories.splice(index, 1);
