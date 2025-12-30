@@ -146,4 +146,14 @@ router.put(EMPLOYE_API_ID, (req, res) => {
   return res.send(employe);
 });
 
+router.delete(EMPLOYE_API_ID, (req, res) => {
+  const employe = employes.find((e) => e.id === req.params.id);
+  if (!employe) return res.status(400).send(NOT_FOUND);
+
+  const index = employes.indexOf(employe);
+  const deletedEmploye = employes.splice(index, 1);
+
+  return res.send(deletedEmploye);
+});
+
 export default router;
