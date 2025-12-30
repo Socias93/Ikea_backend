@@ -59,4 +59,14 @@ router.put(CATEGORY_API_ID, (req, res) => {
   return res.send(category);
 });
 
+router.delete(CATEGORY_API_ID, (req, res) => {
+  const category = categories.find((c) => c.id === req.params.id);
+  if (!category) return res.status(400).send(NOT_FOUND);
+
+  const index = categories.indexOf(category);
+  const deletedCategory = categories.splice(index, 1);
+
+  return res.send(deletedCategory);
+});
+
 export default router;
