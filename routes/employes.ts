@@ -129,4 +129,21 @@ router.post(EMPLOYE_API, (req, res) => {
   return res.send(employe);
 });
 
+router.put(EMPLOYE_API_ID, (req, res) => {
+  const employe = employes.find((e) => e.id === req.params.id);
+  if (!employe) return res.status(400).send(NOT_FOUND);
+
+  const validation = validate(req.body);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
+
+  employe.name = req.body.name;
+  employe.age = req.body.age;
+  employe.email = req.body.email;
+  employe.phone = req.body.phone;
+  employe.role = req.body.role;
+
+  return res.send(employe);
+});
+
 export default router;
