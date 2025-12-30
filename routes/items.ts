@@ -259,4 +259,23 @@ router.post(ITEM_API, (req, res) => {
   return res.send(item);
 });
 
+router.put(ITEM_API_ID, (req, res) => {
+  const item = items.find((i) => i.id === req.params.id);
+  if (!item) return res.status(400).send(ITEM_NOT_FOUND);
+
+  const validation = validate(req.body);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
+
+  const category = categories.find((c) => c.id === req.body.categoryId);
+  if (!category) return res.status(400).send(CATEGORY_NOT_FOUND);
+
+  item.name = req.body.name;
+  item.category = category;
+  item.numberInStock = req.body.numberInStock;
+  item.price = req.body.price;
+
+  return res.send(item);
+});
+
 export default router;
