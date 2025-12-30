@@ -278,4 +278,14 @@ router.put(ITEM_API_ID, (req, res) => {
   return res.send(item);
 });
 
+router.delete(ITEM_API_ID, (req, res) => {
+  const item = items.find((i) => i.id === req.params.id);
+  if (!item) return res.status(400).send(ITEM_NOT_FOUND);
+
+  const index = items.indexOf(item);
+  const deletedItem = items.splice(index, 1);
+
+  return res.send(deletedItem);
+});
+
 export default router;
