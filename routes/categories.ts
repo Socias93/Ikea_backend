@@ -46,4 +46,17 @@ router.post(CATEGORY_API, (req, res) => {
   return res.send(category);
 });
 
+router.put(CATEGORY_API_ID, (req, res) => {
+  const category = categories.find((c) => c.id === req.params.id);
+  if (!category) return res.status(400).send(NOT_FOUND);
+
+  const validation = validate(req.body);
+  if (!validation.success)
+    return res.status(400).send(validation.error.issues[0].message);
+
+  category.name = req.body.name;
+
+  return res.send(category);
+});
+
 export default router;
