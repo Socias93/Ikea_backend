@@ -1,8 +1,11 @@
 import express from "express";
 import { validate } from "./schemas/Categories";
 import { items } from "./items";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const router = express.Router();
+
 const CATEGORY_API = "/";
 const CATEGORY_API_ID = "/:id";
 const NOT_FOUND = "Category not found";
@@ -23,7 +26,8 @@ export const categories: Category[] = [
   { id: "7", name: "Outdoor" },
 ];
 
-router.get(CATEGORY_API, (req, res) => {
+router.get(CATEGORY_API, async (req, res) => {
+  const categories = await prisma.category.findMany();
   return res.send(categories);
 });
 

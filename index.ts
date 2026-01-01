@@ -3,6 +3,9 @@ import categories from "./routes/categories";
 import items from "./routes/items";
 import employes from "./routes/employes";
 
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 const PORT = 5555;
@@ -15,3 +18,14 @@ app.use(ITEMS_URL, items);
 app.use(EMPLOYES_URL, employes);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+async function createCategory() {
+  const category = await prisma.category.create({
+    data: {
+      name: "Lighting",
+    },
+  });
+  console.log(category);
+}
+
+//createCategory();
