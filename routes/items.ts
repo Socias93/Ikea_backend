@@ -1,6 +1,6 @@
 import { categories, Category } from "./categories";
-import express from "express";
 import { validate } from "./schemas/Items";
+import express from "express";
 
 const router = express.Router();
 const ITEM_API = "/";
