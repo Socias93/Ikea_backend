@@ -31,8 +31,10 @@ router.get(CATEGORY_API, async (req, res) => {
   return res.send(categories);
 });
 
-router.get(CATEGORY_API_ID, (req, res) => {
-  const category = categories.find((c) => c.id === req.params.id);
+router.get(CATEGORY_API_ID, async (req, res) => {
+  const category = await prisma.category.findFirst({
+    where: { id: req.params.id },
+  });
   if (!category) return res.status(400).send(NOT_FOUND);
 
   return res.send(category);
