@@ -1,7 +1,9 @@
 import { categories, Category } from "./categories";
 import { validate } from "./schemas/Items";
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const router = express.Router();
 const ITEM_API = "/";
 const ITEM_API_ID = "/:id";
@@ -227,7 +229,8 @@ export const items: Item[] = [
   },
 ];
 
-router.get(ITEM_API, (req, res) => {
+router.get(ITEM_API, async (req, res) => {
+  const items = await prisma.item.findMany();
   return res.send(items);
 });
 
