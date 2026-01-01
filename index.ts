@@ -20,10 +20,14 @@ app.use(EMPLOYES_URL, employes);
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 async function createCategory() {
-  const category = await prisma.category.create({
-    data: {
-      name: "Lighting",
-    },
+  const category = await prisma.category.createMany({
+    data: [
+      { name: "Textiles" },
+      { name: "Storage" },
+      { name: "Kitchen" },
+      { name: "Decor" },
+      { name: "Outdoor" },
+    ],
   });
   console.log(category);
 }
