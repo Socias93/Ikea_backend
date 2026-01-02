@@ -1,6 +1,8 @@
 import express from "express";
 import { validate } from "./schemas/Employes";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const router = express.Router();
 
 const EMPLOYE_API = "/";
@@ -99,8 +101,9 @@ export const employes: Employe[] = [
   },
 ];
 
-router.get(EMPLOYE_API, (req, res) => {
-  return res.send(employes);
+router.get(EMPLOYE_API, async (req, res) => {
+  const employe = await prisma.employe.findMany();
+  return res.send(employe);
 });
 
 router.get(EMPLOYE_API_ID, (req, res) => {

@@ -30,6 +30,6 @@ model Employe {
   id    String @id @default(cuid())
   name  String
   email String
-  phone Int
+  phone String
   role  String
 }
