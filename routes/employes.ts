@@ -106,8 +106,10 @@ router.get(EMPLOYE_API, async (req, res) => {
   return res.send(employe);
 });
 
-router.get(EMPLOYE_API_ID, (req, res) => {
-  const employe = employes.find((e) => e.id === req.params.id);
+router.get(EMPLOYE_API_ID, async (req, res) => {
+  const employe = await prisma.employe.findFirst({
+    where: { id: req.params.id },
+  });
   if (!employe) return res.status(400).send(NOT_FOUND);
 
   return res.send(employe);
