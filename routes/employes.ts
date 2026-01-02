@@ -115,21 +115,19 @@ router.get(EMPLOYE_API_ID, async (req, res) => {
   return res.send(employe);
 });
 
-router.post(EMPLOYE_API, (req, res) => {
+router.post(EMPLOYE_API, async (req, res) => {
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  const employe: Employe = {
-    id: Date.now().toString(),
-    name: req.body.name,
-    age: req.body.age,
-    email: req.body.email,
-    phone: req.body.phone,
-    role: req.body.role,
-  };
-
-  employes.push(employe);
+  const employe = await prisma.employe.create({
+    data: {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      role: req.body.role,
+    },
+  });
 
   return res.send(employe);
 });
