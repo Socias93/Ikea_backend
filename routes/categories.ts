@@ -40,18 +40,18 @@ router.get(CATEGORY_API_ID, async (req, res) => {
   return res.send(category);
 });
 
-router.post(CATEGORY_API, (req, res) => {
+router.post(CATEGORY_API, async (req, res) => {
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  const category: Category = {
-    id: Date.now().toString(),
-    name: req.body.name,
-  };
-  categories.push(category);
+  const newCategory = await prisma.category.create({
+    data: {
+      name: req.body.name,
+    },
+  });
 
-  return res.send(category);
+  return res.send(newCategory);
 });
 
 router.put(CATEGORY_API_ID, (req, res) => {
