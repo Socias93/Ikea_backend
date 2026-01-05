@@ -54,17 +54,22 @@ router.post(CATEGORY_API, async (req, res) => {
   return res.send(newCategory);
 });
 
-router.put(CATEGORY_API_ID, (req, res) => {
-  const category = categories.find((c) => c.id === req.params.id);
+router.put(CATEGORY_API_ID, async (req, res) => {
+  const category = await prisma.category.findFirst({
+    where: { id: req.params.id },
+  });
   if (!category) return res.status(400).send(NOT_FOUND);
 
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  category.name = req.body.name;
+  const updatedCategory = await prisma.category.update({
+    where: { id: req.params.id },
+    data: { name: req.body.name },
+  });
 
-  return res.send(category);
+  return res.send(updatedCategory);
 });
 
 router.delete(CATEGORY_API_ID, (req, res) => {
