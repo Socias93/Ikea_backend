@@ -263,23 +263,30 @@ router.post(ITEM_API, async (req, res) => {
   return res.send(newItem);
 });
 
-router.put(ITEM_API_ID, (req, res) => {
-  const item = items.find((i) => i.id === req.params.id);
+router.put(ITEM_API_ID, async (req, res) => {
+  const item = await prisma.item.findFirst({ where: { id: req.params.id } });
   if (!item) return res.status(400).send(ITEM_NOT_FOUND);
 
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  const category = categories.find((c) => c.id === req.body.categoryId);
+  const category = await prisma.category.findFirst({
+    where: { id: req.body.categoryId },
+  });
   if (!category) return res.status(400).send(CATEGORY_NOT_FOUND);
 
-  item.name = req.body.name;
-  item.category = category;
-  item.numberInStock = req.body.numberInStock;
-  item.price = req.body.price;
+  const updatedItem = await prisma.item.update({
+    where: { id: req.params.id },
+    data: {
+      name: req.body.name,
+      categoryId: req.body.categoryId,
+      price: req.body.price,
+      numberInStock: req.body.numberInStock,
+    },
+  });
 
-  return res.send(item);
+  return res.send(updatedItem);
 });
 
 router.delete(ITEM_API_ID, (req, res) => {
