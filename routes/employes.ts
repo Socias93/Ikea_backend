@@ -132,21 +132,27 @@ router.post(EMPLOYE_API, async (req, res) => {
   return res.send(employe);
 });
 
-router.put(EMPLOYE_API_ID, (req, res) => {
-  const employe = employes.find((e) => e.id === req.params.id);
+router.put(EMPLOYE_API_ID, async (req, res) => {
+  const employe = await prisma.employe.findFirst({
+    where: { id: req.params.id },
+  });
   if (!employe) return res.status(400).send(NOT_FOUND);
 
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  employe.name = req.body.name;
-  employe.age = req.body.age;
-  employe.email = req.body.email;
-  employe.phone = req.body.phone;
-  employe.role = req.body.role;
+  const newEmploye = await prisma.employe.update({
+    where: { id: req.params.id },
+    data: {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      role: req.body.role,
+    },
+  });
 
-  return res.send(employe);
+  return res.send(newEmploye);
 });
 
 router.delete(EMPLOYE_API_ID, (req, res) => {
