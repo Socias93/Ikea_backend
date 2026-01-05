@@ -241,25 +241,26 @@ router.get(ITEM_API_ID, async (req, res) => {
   return res.send(item);
 });
 
-router.post(ITEM_API, (req, res) => {
+router.post(ITEM_API, async (req, res) => {
   const validation = validate(req.body);
   if (!validation.success)
     return res.status(400).send(validation.error.issues[0].message);
 
-  const category = categories.find((c) => c.id === req.body.categoryId);
+  const category = await prisma.category.findFirst({
+    where: { id: req.body.categoryId },
+  });
   if (!category) return res.status(400).send(CATEGORY_NOT_FOUND);
 
-  const item: Item = {
-    id: Date.now().toString(),
-    name: req.body.name,
-    category: category,
-    numberInStock: req.body.numberInStock,
-    price: req.body.price,
-  };
+  const newItem = await prisma.item.create({
+    data: {
+      name: req.body.name,
+      categoryId: req.body.categoryId,
+      price: req.body.price,
+      numberInStock: req.body.numberInStock,
+    },
+  });
 
-  items.push(item);
-
-  return res.send(item);
+  return res.send(newItem);
 });
 
 router.put(ITEM_API_ID, (req, res) => {
