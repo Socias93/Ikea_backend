@@ -155,12 +155,15 @@ router.put(EMPLOYE_API_ID, async (req, res) => {
   return res.send(newEmploye);
 });
 
-router.delete(EMPLOYE_API_ID, (req, res) => {
-  const employe = employes.find((e) => e.id === req.params.id);
+router.delete(EMPLOYE_API_ID, async (req, res) => {
+  const employe = await prisma.employe.findFirst({
+    where: { id: req.params.id },
+  });
   if (!employe) return res.status(400).send(NOT_FOUND);
 
-  const index = employes.indexOf(employe);
-  const deletedEmploye = employes.splice(index, 1);
+  const deletedEmploye = await prisma.employe.delete({
+    where: { id: req.params.id },
+  });
 
   return res.send(deletedEmploye);
 });
