@@ -10,11 +10,6 @@ const CATEGORY_API_ID = "/:id";
 const NOT_FOUND = "Category not found";
 const IS_USED = "Category must be empty to be able to delte it";
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
 router.get(CATEGORY_API, async (req, res) => {
   const categories = await prisma.category.findMany();
   return res.send(categories);
