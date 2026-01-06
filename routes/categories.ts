@@ -1,6 +1,5 @@
 import express from "express";
 import { validate } from "./schemas/Categories";
-import { items } from "./items";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -15,16 +14,6 @@ export interface Category {
   id: string;
   name: string;
 }
-
-export const categories: Category[] = [
-  { id: "1", name: "Furniture" },
-  { id: "2", name: "Lighting" },
-  { id: "3", name: "Textiles" },
-  { id: "4", name: "Storage" },
-  { id: "5", name: "Kitchen" },
-  { id: "6", name: "Decor" },
-  { id: "7", name: "Outdoor" },
-];
 
 router.get(CATEGORY_API, async (req, res) => {
   const categories = await prisma.category.findMany();
@@ -78,7 +67,9 @@ router.delete(CATEGORY_API_ID, async (req, res) => {
   });
   if (!category) return res.status(400).send(NOT_FOUND);
 
-  const used = items.some((i) => i.category.id === category.id);
+  const used = await prisma.item.findFirst({
+    where: { categoryId: category.id },
+  });
   if (used) {
     return res.status(400).send(IS_USED);
   }
