@@ -289,12 +289,13 @@ router.put(ITEM_API_ID, async (req, res) => {
   return res.send(updatedItem);
 });
 
-router.delete(ITEM_API_ID, (req, res) => {
-  const item = items.find((i) => i.id === req.params.id);
+router.delete(ITEM_API_ID, async (req, res) => {
+  const item = await prisma.item.findFirst({ where: { id: req.params.id } });
   if (!item) return res.status(400).send(ITEM_NOT_FOUND);
 
-  const index = items.indexOf(item);
-  const deletedItem = items.splice(index, 1);
+  const deletedItem = await prisma.item.delete({
+    where: { id: req.params.id },
+  });
 
   return res.send(deletedItem);
 });
