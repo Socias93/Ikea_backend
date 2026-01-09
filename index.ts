@@ -8,6 +8,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const app = express();
+app.use(cors({ origin: "http://localhost:5173" }));
+
 app.use(express.json());
 const PORT = 5555;
 const CATEGORIES_URL = "/api/categories";
