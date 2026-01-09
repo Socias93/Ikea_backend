@@ -2,6 +2,7 @@ import express from "express";
 import categories from "./routes/categories";
 import items from "./routes/items";
 import employes from "./routes/employes";
+import cors from "cors";
 
 import { PrismaClient } from "@prisma/client";
 
