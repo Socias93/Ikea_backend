@@ -10,12 +10,16 @@ const ITEM_NOT_FOUND = "item not found";
 const CATEGORY_NOT_FOUND = "Category not found";
 
 router.get(ITEM_API, async (req, res) => {
-  const items = await prisma.item.findMany();
+  const items = await prisma.item.findMany({ include: { category: true } });
+
   return res.send(items);
 });
 
 router.get(ITEM_API_ID, async (req, res) => {
-  const item = await prisma.item.findFirst({ where: { id: req.params.id } });
+  const item = await prisma.item.findFirst({
+    where: { id: req.params.id },
+    include: { category: true },
+  });
   if (!item) return res.status(400).send(ITEM_NOT_FOUND);
 
   return res.send(item);
